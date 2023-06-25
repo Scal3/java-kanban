@@ -42,8 +42,8 @@ public class EpicTask extends Task {
                 ", status='" + status + '\'';
 
         result += subtasks != null
-                ? ", subtasks.length=" + subtasks.size() + '\''
-                : ", subtasks.length='null" + '\'';
+                ? ", subtasks=" + subtasks + '\''
+                : ", subtasks='null" + '\'';
 
         return result + '}';
     }
