@@ -4,10 +4,7 @@ import practicum.yandex.task.EpicTask;
 import practicum.yandex.task.SubTask;
 import practicum.yandex.task.Task;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Manager {
     private final String STATUS_NEW = "NEW";
@@ -172,20 +169,8 @@ public class Manager {
         }
     }
 
-    public SubTask[] getEpicSubTasks(int id) {
-        EpicTask epic = getEpicTaskById(id);
-
-        if (epic != null) {
-            SubTask[] arr = new SubTask[epic.getSubtasks().size()];
-
-            for (int i = 0; i < epic.getSubtasks().size(); i++) {
-                arr[i] = epic.getSubtasks().get(i);
-            }
-
-            return arr;
-        } else {
-            return null;
-        }
+    public List<SubTask> getEpicSubTasks(int id) {
+        return getEpicTaskById(id) != null ? getEpicTaskById(id).getSubtasks() : null;
     }
 
     private void calculateEpicTaskStatus(EpicTask task) {
