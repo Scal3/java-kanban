@@ -1,10 +1,11 @@
 package practicum.yandex.task;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class EpicTask extends Task {
-    private ArrayList<SubTask> subtasks;
+    private List<SubTask> subtasks;
 
     public EpicTask(String name, String description, String status, ArrayList<SubTask> subtasks) {
         super(name, description, status);
@@ -13,7 +14,7 @@ public class EpicTask extends Task {
     }
 
     public ArrayList<SubTask> getSubtasks() {
-        return subtasks;
+        return (ArrayList<SubTask>) subtasks;
     }
 
     public void setSubtasks(ArrayList<SubTask> subtasks) {

@@ -7,14 +7,15 @@ import practicum.yandex.task.Task;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Manager {
     private final String STATUS_NEW = "NEW";
     private final String STATUS_DONE = "DONE";
     private final String STATUS_IN_PROGRESS = "IN_PROGRESS";
-    private HashMap<Integer, Task> tasks;
-    private HashMap<Integer, EpicTask> epicTasks;
-    private HashMap<Integer, SubTask> subTasks;
+    private Map<Integer, Task> tasks;
+    private Map<Integer, EpicTask> epicTasks;
+    private Map<Integer, SubTask> subTasks;
     private int taskId;
 
     public Manager() {
@@ -25,15 +26,15 @@ public class Manager {
     }
 
     public Collection<Task> getTasksValues() {
-        return tasks.values();
+        return new ArrayList<>(tasks.values());
     }
 
     public Collection<EpicTask> getEpicTasksValues() {
-        return epicTasks.values();
+        return new ArrayList<>(epicTasks.values());
     }
 
     public Collection<SubTask> getSubTasksValues() {
-        return subTasks.values();
+        return new ArrayList<>(subTasks.values());
     }
 
     public void deleteAllTasks() {
@@ -49,9 +50,7 @@ public class Manager {
         subTasks.clear();
 
         for (EpicTask epic : epicTasks.values()) {
-            if (epic != null) {
-                epic.setSubtasks(null);
-            }
+            epic.setSubtasks(null);
         }
     }
 
@@ -79,11 +78,9 @@ public class Manager {
                 for (SubTask sub : task.getSubtasks()) {
                     createSubTask(sub);
                 }
-                calculateEpicTaskStatus(task);
-            } else {
-                calculateEpicTaskStatus(task);
             }
 
+            calculateEpicTaskStatus(task);
             epicTasks.put(++taskId, task);
         }
     }
@@ -106,15 +103,12 @@ public class Manager {
         if (epicTasks.containsKey(id) && task != null) {
             EpicTask oldEpic = epicTasks.get(id);
 
-            for (int i = 1; i <= taskId; i++) {
-                SubTask subTask = subTasks.get(i);
+            for (Integer key : subTasks.keySet()) {
+                SubTask subTask = subTasks.get(key);
+                EpicTask epicFromSub = subTask.getEpicTaskReference();
 
-                if (subTask != null) {
-                    EpicTask epicFromSub = subTask.getEpicTaskReference();
-
-                    if (oldEpic.equals(epicFromSub)) {
-                        subTasks.remove(i);
-                    }
+                if (oldEpic.equals(epicFromSub)) {
+                    subTasks.remove(key);
                 }
             }
 
@@ -122,12 +116,9 @@ public class Manager {
                 for (SubTask sub : task.getSubtasks()) {
                     createSubTask(sub);
                 }
-
-                calculateEpicTaskStatus(task);
-            } else {
-                calculateEpicTaskStatus(task);
             }
 
+            calculateEpicTaskStatus(task);
             epicTasks.put(id, task);
         }
     }
@@ -154,11 +145,11 @@ public class Manager {
             EpicTask epic = epicTasks.get(id);
 
             if (!epic.getSubtasks().isEmpty()) {
-                for (int i = 0; i <= taskId; i++) {
-                    SubTask subFromSubTasks = subTasks.get(i);
+                for (Integer key : subTasks.keySet()) {
+                    SubTask subFromSubTasks = subTasks.get(key);
 
                     if (subFromSubTasks != null && subFromSubTasks.getEpicTaskReference().equals(epic)) {
-                        subTasks.remove(i);
+                        subTasks.remove(key);
                     }
                 }
             }
