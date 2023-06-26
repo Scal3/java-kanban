@@ -1,4 +1,4 @@
-package practicum.yandex.control;
+package practicum.yandex.manager;
 
 import practicum.yandex.task.EpicTask;
 import practicum.yandex.task.SubTask;
@@ -13,9 +13,9 @@ public class Manager {
     private final String STATUS_NEW = "NEW";
     private final String STATUS_DONE = "DONE";
     private final String STATUS_IN_PROGRESS = "IN_PROGRESS";
-    private Map<Integer, Task> tasks;
-    private Map<Integer, EpicTask> epicTasks;
-    private Map<Integer, SubTask> subTasks;
+    private final Map<Integer, Task> tasks;
+    private final Map<Integer, EpicTask> epicTasks;
+    private final Map<Integer, SubTask> subTasks;
     private int taskId;
 
     public Manager() {
@@ -68,7 +68,8 @@ public class Manager {
 
     public void createTask(Task task) {
         if (task != null) {
-            tasks.put(++taskId, task);
+            task.setId(++taskId);
+            tasks.put(taskId, task);
         }
     }
 
@@ -81,27 +82,29 @@ public class Manager {
             }
 
             calculateEpicTaskStatus(task);
-            epicTasks.put(++taskId, task);
+            task.setId(++taskId);
+            epicTasks.put(taskId, task);
         }
     }
 
     public void createSubTask(SubTask task) {
         if (task != null) {
-            subTasks.put(++taskId, task);
+            task.setId(++taskId);
+            subTasks.put(taskId, task);
             EpicTask epic = task.getEpicTaskReference();
             calculateEpicTaskStatus(epic);
         }
     }
 
-    public void updateTaskById(int id, Task task) {
-        if (tasks.containsKey(id) && task != null) {
-            tasks.put(id, task);
+    public void updateTask(Task task) {
+        if (task != null && tasks.containsKey(task.getId())) {
+            tasks.put(task.getId(), task);
         }
     }
 
-    public void updateEpicTaskById(int id, EpicTask task) {
-        if (epicTasks.containsKey(id) && task != null) {
-            EpicTask oldEpic = epicTasks.get(id);
+    public void updateEpicTask(EpicTask task) {
+        if (task != null && epicTasks.containsKey(task.getId())) {
+            EpicTask oldEpic = epicTasks.get(task.getId());
 
             for (Integer key : subTasks.keySet()) {
                 SubTask subTask = subTasks.get(key);
@@ -119,20 +122,20 @@ public class Manager {
             }
 
             calculateEpicTaskStatus(task);
-            epicTasks.put(id, task);
+            epicTasks.put(task.getId(), task);
         }
     }
 
-    public void updateSubTaskById(int id, SubTask task) {
-        if (subTasks.containsKey(id) && task != null) {
-            EpicTask epicFromUnUpdatedSub = subTasks.get(id).getEpicTaskReference();
+    public void updateSubTask(SubTask task) {
+        if (task != null && tasks.containsKey(task.getId())) {
+            EpicTask epicFromUnUpdatedSub = subTasks.get(task.getId()).getEpicTaskReference();
             EpicTask epicFromUpdatedSub = task.getEpicTaskReference();
 
             if (epicFromUnUpdatedSub.equals(epicFromUpdatedSub)) {
                 calculateEpicTaskStatus(epicFromUpdatedSub);
             }
 
-            subTasks.put(id, task);
+            subTasks.put(task.getId(), task);
         }
     }
 
@@ -169,8 +172,20 @@ public class Manager {
         }
     }
 
-    public ArrayList<SubTask> getEpicSubTasks(EpicTask epicTask) {
-        return epicTask.getSubtasks();
+    public SubTask[] getEpicSubTasks(int id) {
+        EpicTask epic = getEpicTaskById(id);
+
+        if (epic != null) {
+            SubTask[] arr = new SubTask[epic.getSubtasks().size()];
+
+            for (int i = 0; i < epic.getSubtasks().size(); i++) {
+                arr[i] = epic.getSubtasks().get(i);
+            }
+
+            return arr;
+        } else {
+            return null;
+        }
     }
 
     private void calculateEpicTaskStatus(EpicTask task) {

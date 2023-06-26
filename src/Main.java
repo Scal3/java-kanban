@@ -1,4 +1,4 @@
-import practicum.yandex.control.Manager;
+import practicum.yandex.manager.Manager;
 
 public class Main {
 
