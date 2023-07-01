@@ -11,11 +11,13 @@ public class Main {
 
         ArrayList<SubTask> subs = new ArrayList<>();
         EpicTask epic = new EpicTask("Epic", "Epic", "NEW", subs);
-        SubTask sub = new SubTask("Sub", "Sub", "NEW", epic);
+        SubTask sub = new SubTask("Sub1", "Sub1", "DONE", epic);
+        SubTask sub2 = new SubTask("Sub2", "Sub2", "DONE", epic);
+
         subs.add(sub);
+        subs.add(sub2);
 
         manager.createEpicTask(epic);
-
-        System.out.println(manager.getEpicSubTasks(2));
+        System.out.println(manager.getEpicTasksValues().toString());
     }
 }
