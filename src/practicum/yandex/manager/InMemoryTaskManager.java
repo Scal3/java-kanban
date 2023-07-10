@@ -7,9 +7,6 @@ import practicum.yandex.task.Task;
 import java.util.*;
 
 public class InMemoryTaskManager implements Manager {
-    private final String STATUS_NEW = "NEW";
-    private final String STATUS_DONE = "DONE";
-    private final String STATUS_IN_PROGRESS = "IN_PROGRESS";
     private static final boolean SUCCESS = true;
     private static final boolean FALSE = false;
     private final Map<Integer, Task> tasks;
@@ -206,7 +203,7 @@ public class InMemoryTaskManager implements Manager {
 
     private void calculateEpicTaskStatus(EpicTask task) {
         if (task.getSubtasks() == null || task.getSubtasks().isEmpty()) {
-            task.setStatus(STATUS_NEW);
+            task.setStatus(Statuses.NEW.name());
         } else {
             String[] subTasksStatuses = new String[task.getSubtasks().size()];
 
@@ -218,7 +215,7 @@ public class InMemoryTaskManager implements Manager {
             int newCounter = 0;
 
             for (String status : subTasksStatuses) {
-                if (status.equals(STATUS_NEW)) {
+                if (status.equals(Statuses.NEW.name())) {
                     newCounter++;
                 } else {
                     doneCounter++;
@@ -226,11 +223,11 @@ public class InMemoryTaskManager implements Manager {
             }
 
             if (doneCounter == 0 && newCounter > 0) {
-                task.setStatus(STATUS_NEW);
+                task.setStatus(Statuses.NEW.name());
             } else if (newCounter == 0 && doneCounter > 0) {
-                task.setStatus(STATUS_DONE);
+                task.setStatus(Statuses.DONE.name());
             } else {
-                task.setStatus(STATUS_IN_PROGRESS);
+                task.setStatus(Statuses.IN_PROGRESS.name());
             }
         }
     }

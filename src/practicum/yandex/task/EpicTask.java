@@ -1,23 +1,22 @@
 package practicum.yandex.task;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class EpicTask extends Task {
     private List<SubTask> subtasks;
 
-    public EpicTask(String name, String description, String status, ArrayList<SubTask> subtasks) {
+    public EpicTask(String name, String description, String status, List<SubTask> subtasks) {
         super(name, description, status);
 
         this.subtasks = subtasks;
     }
 
-    public ArrayList<SubTask> getSubtasks() {
-        return (ArrayList<SubTask>) subtasks;
+    public List<SubTask> getSubtasks() {
+        return subtasks;
     }
 
-    public void setSubtasks(ArrayList<SubTask> subtasks) {
+    public void setSubtasks(List<SubTask> subtasks) {
         this.subtasks = subtasks;
     }
 
