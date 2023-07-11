@@ -4,10 +4,9 @@ import practicum.yandex.task.EpicTask;
 import practicum.yandex.task.SubTask;
 import practicum.yandex.task.Task;
 
-import java.util.Collection;
 import java.util.List;
 
-public interface Manager {
+public interface TaskManager {
     List<Task> getHistory();
     List<Task> getTasksValues();
     List<EpicTask> getEpicTasksValues();

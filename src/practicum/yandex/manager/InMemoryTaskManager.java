@@ -6,7 +6,7 @@ import practicum.yandex.task.Task;
 
 import java.util.*;
 
-public class InMemoryTaskManager implements Manager {
+public class InMemoryTaskManager implements TaskManager {
     private static final boolean SUCCESS = true;
     private static final boolean FALSE = false;
     private static final byte MAX_HISTORY_QUANTITY = 10;

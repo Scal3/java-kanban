@@ -1,15 +1,15 @@
 import practicum.yandex.manager.InMemoryTaskManager;
-import practicum.yandex.manager.Manager;
+import practicum.yandex.manager.Managers;
+import practicum.yandex.manager.TaskManager;
 import practicum.yandex.task.EpicTask;
 import practicum.yandex.task.SubTask;
-import practicum.yandex.task.Task;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        Manager manager = new InMemoryTaskManager();
+        TaskManager manager = new InMemoryTaskManager();
         List<SubTask> subs = new ArrayList<>();
         EpicTask epic = new EpicTask("epic", "epic", "NEW", subs);
         SubTask sub1 = new SubTask("sub1", "sub1", "DONE", epic);
