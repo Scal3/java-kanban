@@ -8,9 +8,10 @@ import java.util.Collection;
 import java.util.List;
 
 public interface Manager {
-    Collection<Task> getTasksValues();
-    Collection<EpicTask> getEpicTasksValues();
-    Collection<SubTask> getSubTasksValues();
+    List<Task> getHistory();
+    List<Task> getTasksValues();
+    List<EpicTask> getEpicTasksValues();
+    List<SubTask> getSubTasksValues();
     boolean deleteAllTasks();
     boolean deleteAllEpicTasks();
     boolean deleteAllSubTasks();

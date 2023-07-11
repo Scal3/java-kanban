@@ -2,6 +2,7 @@ import practicum.yandex.manager.InMemoryTaskManager;
 import practicum.yandex.manager.Manager;
 import practicum.yandex.task.EpicTask;
 import practicum.yandex.task.SubTask;
+import practicum.yandex.task.Task;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,5 @@ public class Main {
         subs.add(sub1);
         subs.add(sub2);
         manager.createEpicTask(epic);
-        System.out.println(manager.getEpicTaskById(3));
     }
 }

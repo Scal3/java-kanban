@@ -9,30 +9,35 @@ import java.util.*;
 public class InMemoryTaskManager implements Manager {
     private static final boolean SUCCESS = true;
     private static final boolean FALSE = false;
+    private static final byte MAX_HISTORY_QUANTITY = 10;
     private final Map<Integer, Task> tasks;
     private final Map<Integer, EpicTask> epicTasks;
     private final Map<Integer, SubTask> subTasks;
+    private final Map<Integer, Task> tasksHistory;
+    private int historyTasksCounter;
     private int taskId;
 
     public InMemoryTaskManager() {
         tasks = new HashMap<>();
         epicTasks = new HashMap<>();
         subTasks = new HashMap<>();
+        tasksHistory = new HashMap<>();
+        historyTasksCounter = 0;
         taskId = 0;
     }
 
     @Override
-    public Collection<Task> getTasksValues() {
+    public List<Task> getTasksValues() {
         return new ArrayList<>(tasks.values());
     }
 
     @Override
-    public Collection<EpicTask> getEpicTasksValues() {
+    public List<EpicTask> getEpicTasksValues() {
         return new ArrayList<>(epicTasks.values());
     }
 
     @Override
-    public Collection<SubTask> getSubTasksValues() {
+    public List<SubTask> getSubTasksValues() {
         return new ArrayList<>(subTasks.values());
     }
 
@@ -63,17 +68,32 @@ public class InMemoryTaskManager implements Manager {
 
     @Override
     public Task getTaskById(int id) {
-        return tasks.get(id);
+        if (tasks.containsKey(id)) {
+            addToTasksHistory(tasks.get(id));
+            return tasks.get(id);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public EpicTask getEpicTaskById(int id) {
-        return epicTasks.get(id);
+        if (epicTasks.containsKey(id)) {
+            addToTasksHistory(epicTasks.get(id));
+            return epicTasks.get(id);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public SubTask getSubTaskById(int id) {
-        return subTasks.get(id);
+        if (subTasks.containsKey(id)) {
+            addToTasksHistory(subTasks.get(id));
+            return subTasks.get(id);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -199,6 +219,27 @@ public class InMemoryTaskManager implements Manager {
     @Override
     public List<SubTask> getEpicSubTasks(int id) {
         return getEpicTaskById(id) != null ? new ArrayList<>(getEpicTaskById(id).getSubtasks()) : null;
+    }
+
+    @Override
+    public List<Task> getHistory() {
+        List<Task> history = new ArrayList<>();
+
+        if (historyTasksCounter <= MAX_HISTORY_QUANTITY) {
+            for (int i = historyTasksCounter; i > 0; i--) {
+                history.add(tasksHistory.get(i));
+            }
+        } else {
+            for (int i = historyTasksCounter; i > historyTasksCounter - MAX_HISTORY_QUANTITY; i--) {
+                history.add(tasksHistory.get(i));
+            }
+        }
+
+        return history;
+    }
+
+    private void addToTasksHistory(Task task) {
+        tasksHistory.put(++historyTasksCounter, task);
     }
 
     private void calculateEpicTaskStatus(EpicTask task) {
