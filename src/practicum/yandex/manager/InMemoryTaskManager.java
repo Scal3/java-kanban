@@ -9,20 +9,17 @@ import java.util.*;
 public class InMemoryTaskManager implements TaskManager {
     private static final boolean SUCCESS = true;
     private static final boolean FALSE = false;
-    private static final byte MAX_HISTORY_QUANTITY = 10;
     private final Map<Integer, Task> tasks;
     private final Map<Integer, EpicTask> epicTasks;
     private final Map<Integer, SubTask> subTasks;
-    private final Map<Integer, Task> tasksHistory;
-    private int historyTasksCounter;
+    private final HistoryManager historyManager;
     private int taskId;
 
     public InMemoryTaskManager() {
         tasks = new HashMap<>();
         epicTasks = new HashMap<>();
         subTasks = new HashMap<>();
-        tasksHistory = new HashMap<>();
-        historyTasksCounter = 0;
+        historyManager = Managers.getDefaultHistory();
         taskId = 0;
     }
 
@@ -223,23 +220,11 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public List<Task> getHistory() {
-        List<Task> history = new ArrayList<>();
-
-        if (historyTasksCounter <= MAX_HISTORY_QUANTITY) {
-            for (int i = historyTasksCounter; i > 0; i--) {
-                history.add(tasksHistory.get(i));
-            }
-        } else {
-            for (int i = historyTasksCounter; i > historyTasksCounter - MAX_HISTORY_QUANTITY; i--) {
-                history.add(tasksHistory.get(i));
-            }
-        }
-
-        return history;
+        return historyManager.getHistory();
     }
 
     private void addToTasksHistory(Task task) {
-        tasksHistory.put(++historyTasksCounter, task);
+        historyManager.add(task);
     }
 
     private void calculateEpicTaskStatus(EpicTask task) {
