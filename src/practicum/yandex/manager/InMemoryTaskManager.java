@@ -7,8 +7,6 @@ import practicum.yandex.task.Task;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    private static final boolean SUCCESS = true;
-    private static final boolean FALSE = false;
     private final Map<Integer, Task> tasks;
     private final Map<Integer, EpicTask> epicTasks;
     private final Map<Integer, SubTask> subTasks;
@@ -39,28 +37,23 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean deleteAllTasks() {
+    public void deleteAllTasks() {
         tasks.clear();
-        return SUCCESS;
     }
 
     @Override
-    public boolean deleteAllEpicTasks() {
+    public void deleteAllEpicTasks() {
         epicTasks.clear();
         deleteAllSubTasks();
-
-        return SUCCESS;
     }
 
     @Override
-    public boolean deleteAllSubTasks() {
+    public void deleteAllSubTasks() {
         subTasks.clear();
 
         for (EpicTask epic : epicTasks.values()) {
             epic.setSubtasks(null);
         }
-
-        return SUCCESS;
     }
 
     @Override
@@ -94,21 +87,19 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean createTask(Task task) {
+    public void createTask(Task task) {
         if (task == null) {
-            return FALSE;
+            return;
         }
 
         task.setId(++taskId);
         tasks.put(taskId, task);
-
-        return SUCCESS;
     }
 
     @Override
-    public boolean createEpicTask(EpicTask task) {
+    public void createEpicTask(EpicTask task) {
         if (task == null) {
-            return FALSE;
+            return;
         }
 
         if (!task.getSubtasks().isEmpty()) {
@@ -120,36 +111,30 @@ public class InMemoryTaskManager implements TaskManager {
         calculateEpicTaskStatus(task);
         task.setId(++taskId);
         epicTasks.put(taskId, task);
-
-        return SUCCESS;
     }
 
     @Override
-    public boolean createSubTask(SubTask task) {
+    public void createSubTask(SubTask task) {
         if (task == null) {
-            return FALSE;
+            return;
         }
 
         task.setId(++taskId);
         subTasks.put(taskId, task);
         calculateEpicTaskStatus(task.getEpicTaskReference());
-
-        return SUCCESS;
     }
 
     @Override
-    public boolean updateTask(Task task) {
+    public void updateTask(Task task) {
         if (task != null && tasks.containsKey(task.getId())) {
             tasks.put(task.getId(), task);
         }
-
-        return SUCCESS;
     }
 
     @Override
-    public boolean updateEpicTask(EpicTask task) {
+    public void updateEpicTask(EpicTask task) {
         if (task == null || !epicTasks.containsKey(task.getId())) {
-            return FALSE;
+            return;
         }
 
         for (SubTask sub : epicTasks.get(task.getId()).getSubtasks()) {
@@ -164,30 +149,25 @@ public class InMemoryTaskManager implements TaskManager {
 
         calculateEpicTaskStatus(task);
         epicTasks.put(task.getId(), task);
-
-        return SUCCESS;
     }
 
     @Override
-    public boolean updateSubTask(SubTask task) {
+    public void updateSubTask(SubTask task) {
         if (task == null || !tasks.containsKey(task.getId())) {
-            return FALSE;
+            return;
         }
 
         calculateEpicTaskStatus(task.getEpicTaskReference());
         subTasks.put(task.getId(), task);
-
-        return SUCCESS;
     }
 
     @Override
-    public boolean deleteTaskById(int id) {
+    public void deleteTaskById(int id) {
         tasks.remove(id);
-        return SUCCESS;
     }
 
     @Override
-    public boolean deleteEpicTaskById(int id) {
+    public void deleteEpicTaskById(int id) {
         if (epicTasks.get(id) != null && !epicTasks.get(id).getSubtasks().isEmpty()) {
             for (SubTask sub : epicTasks.get(id).getSubtasks()) {
                 subTasks.remove(sub.getId());
@@ -195,13 +175,12 @@ public class InMemoryTaskManager implements TaskManager {
         }
 
         epicTasks.remove(id);
-        return SUCCESS;
     }
 
     @Override
-    public boolean deleteSubTaskById(int id) {
+    public void deleteSubTaskById(int id) {
         if (!subTasks.containsKey(id)) {
-            return FALSE;
+            return;
         }
 
         EpicTask epic = subTasks.get(id).getEpicTaskReference();
@@ -209,8 +188,6 @@ public class InMemoryTaskManager implements TaskManager {
         epic.getSubtasks().remove(subTasks.get(id));
         subTasks.remove(id);
         calculateEpicTaskStatus(epic);
-
-        return SUCCESS;
     }
 
     @Override
