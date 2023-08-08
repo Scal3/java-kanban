@@ -36,6 +36,7 @@ public class SubTask extends Task {
     @Override
     public String toString() {
         String result = "SubTask{" +
+                "id='" + id + '\'' +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'';

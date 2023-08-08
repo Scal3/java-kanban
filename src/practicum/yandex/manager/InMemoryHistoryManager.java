@@ -1,54 +1,49 @@
 package practicum.yandex.manager;
 
+import practicum.yandex.task.EpicTask;
+import practicum.yandex.task.SubTask;
 import practicum.yandex.task.Task;
 import practicum.yandex.util.Node;
 
 import java.util.*;
 
-// Goal
-// Избавиться от повторных просмотров в истории
-// Если одна и та же задача была добавлена в историю, предыдущая её версия должна перезатираться
-// ??? Вроде как ещё и ограничение истории нужно убрать
-
 public class InMemoryHistoryManager implements HistoryManager {
-    private static final byte MAX_HISTORY_QUANTITY = 10;
-    private static final byte FIRST_ELEMENT = 0;
-    private final List<Task> tasksHistory;
-
-    public InMemoryHistoryManager() {
-        tasksHistory = new LinkedList<>();
-    }
+    private final CustomLinkedList tasksHistory = new CustomLinkedList();
 
     @Override
     public void add(Task task) {
-        if (tasksHistory.size() < MAX_HISTORY_QUANTITY) {
-            tasksHistory.add(task);
+        if (tasksHistory.contains(task.getId())) {
+            tasksHistory.removeNode(tasksHistory.getById(task.getId()));
+            tasksHistory.linkLast(task);
         } else {
-            tasksHistory.remove(FIRST_ELEMENT);
-            tasksHistory.add(task);
+            tasksHistory.linkLast(task);
         }
     }
 
     @Override
     public void remove(int id) {
+        if (!tasksHistory.contains(id)) return;
 
+        if (tasksHistory.getById(id).value instanceof EpicTask) {
+            EpicTask epic = (EpicTask) tasksHistory.getById(id).value;
+
+            for (SubTask sub : epic.getSubtasks()) {
+                tasksHistory.removeNode(tasksHistory.getById(sub.getId()));
+            }
+        }
+
+        tasksHistory.removeNode(tasksHistory.getById(id));
     }
 
     @Override
     public List<Task> getHistory() {
-        return new ArrayList<>(tasksHistory);
+        return tasksHistory.getTasks();
     }
 }
 
-
-// Нельзя делать удаление предыдущей записи через итерацию по листу
-// Предыдущий просмотр должен быть удалён сразу же после появления нового — за O(1)
-// CustomLinkedList позволяет удалить элемент из произвольного места за О(1) с одним важным условием —
-// если программа уже дошла до этого места по списку(Что это значит???)
 class CustomLinkedList {
     private Node<Task> head;
     private Node<Task> tail;
-    private int size;
     private final Map<Integer, Node<Task>> map = new HashMap<>();
 
     public void linkLast(Task task) {
@@ -65,24 +60,37 @@ class CustomLinkedList {
 
         tail = newNode;
         map.put(task.getId(), newNode);
-        size++;
     }
 
     public void removeNode(Node<Task> node) {
-        //
+        if (node == null) return;
+
+        if (node.prev != null) {
+            node.prev.next = node.next;
+        }
+
+        if (node.next != null) {
+            node.next.prev = node.prev;
+        }
+
+        map.remove(node.value.getId());
+    }
+
+    public Node<Task> getById(int id) {
+        return map.get(id);
+    }
+
+    public boolean contains(int id) {
+        return map.containsKey(id);
     }
 
     public List<Task> getTasks() {
         if (head == null) return null;
 
         List<Task> list = new ArrayList<>();
-        Node<Task> node = head;
-        int counter = size;
 
-        while (counter > 0) {
+        for (Node<Task> node : map.values()) {
             list.add(node.value);
-            node = node.next;
-            counter--;
         }
 
         return list;

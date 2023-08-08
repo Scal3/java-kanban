@@ -37,6 +37,7 @@ public class EpicTask extends Task {
     @Override
     public String toString() {
         String result = "EpicTask{" +
+                "id='" + id + '\'' +
                 "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'';

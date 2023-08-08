@@ -10,21 +10,19 @@ public class Main {
     public static void main(String[] args) {
         TaskManager manager = new InMemoryTaskManager();
         List<SubTask> subs = new ArrayList<>();
-        EpicTask epic = new EpicTask("epic", "epic", "NEW", subs);
-        SubTask sub1 = new SubTask("sub1", "sub1", "DONE", epic);
-        SubTask sub2 = new SubTask("sub2", "sub2", "DONE", epic);
+        List<SubTask> subs2 = new ArrayList<>();
+
+        EpicTask epic1 = new EpicTask("epic", "epic", "NEW", subs);
+        EpicTask epic2 = new EpicTask("epic2", "epic2", "NEW", subs2);
+        SubTask sub1 = new SubTask("sub1", "sub1", "DONE", epic1);
+        SubTask sub2 = new SubTask("sub2", "sub2", "DONE", epic1);
+        SubTask sub3 = new SubTask("sub3", "sub3", "DONE", epic1);
 
         subs.add(sub1);
         subs.add(sub2);
-        manager.createEpicTask(epic);
+        subs.add(sub3);
 
-        manager.getEpicTaskById(3);
-        manager.getEpicTaskById(3);
-        manager.getEpicTaskById(3);
-        manager.getEpicTaskById(3);
-        manager.getEpicTaskById(3);
-
-
-        System.out.println(manager.getHistory());
+        manager.createEpicTask(epic1);
+        manager.createEpicTask(epic2);
     }
 }
