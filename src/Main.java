@@ -17,5 +17,14 @@ public class Main {
         subs.add(sub1);
         subs.add(sub2);
         manager.createEpicTask(epic);
+
+        manager.getEpicTaskById(3);
+        manager.getEpicTaskById(3);
+        manager.getEpicTaskById(3);
+        manager.getEpicTaskById(3);
+        manager.getEpicTaskById(3);
+
+
+        System.out.println(manager.getHistory());
     }
 }
