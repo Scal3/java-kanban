@@ -1,7 +1,5 @@
 package practicum.yandex.manager;
 
-import practicum.yandex.task.EpicTask;
-import practicum.yandex.task.SubTask;
 import practicum.yandex.task.Task;
 import practicum.yandex.util.Node;
 
@@ -14,24 +12,13 @@ public class InMemoryHistoryManager implements HistoryManager {
     public void add(Task task) {
         if (tasksHistory.contains(task.getId())) {
             tasksHistory.removeNode(tasksHistory.getById(task.getId()));
-            tasksHistory.linkLast(task);
-        } else {
-            tasksHistory.linkLast(task);
         }
+
+        tasksHistory.linkLast(task);
     }
 
     @Override
     public void remove(int id) {
-        if (!tasksHistory.contains(id)) return;
-
-        if (tasksHistory.getById(id).value instanceof EpicTask) {
-            EpicTask epic = (EpicTask) tasksHistory.getById(id).value;
-
-            for (SubTask sub : epic.getSubtasks()) {
-                tasksHistory.removeNode(tasksHistory.getById(sub.getId()));
-            }
-        }
-
         tasksHistory.removeNode(tasksHistory.getById(id));
     }
 
@@ -42,41 +29,41 @@ public class InMemoryHistoryManager implements HistoryManager {
 }
 
 class CustomLinkedList {
-    private Node<Task> head;
-    private Node<Task> tail;
-    private final Map<Integer, Node<Task>> map = new HashMap<>();
+    private Node head;
+    private Node tail;
+    private final Map<Integer, Node> map = new HashMap<>();
 
     public void linkLast(Task task) {
         if (task == null) return;
 
-        Node<Task> newNode = new Node<>(task);
+        Node newNode = new Node(task);
 
         if (tail == null) {
             head = newNode;
         } else {
-            tail.next = newNode;
-            newNode.prev = tail;
+            tail.setNext(newNode);
+            newNode.setPrev(tail);
         }
 
         tail = newNode;
         map.put(task.getId(), newNode);
     }
 
-    public void removeNode(Node<Task> node) {
+    public void removeNode(Node node) {
         if (node == null) return;
 
-        if (node.prev != null) {
-            node.prev.next = node.next;
+        if (node.getPrev() != null) {
+            node.getPrev().setNext(node.getNext());
         }
 
-        if (node.next != null) {
-            node.next.prev = node.prev;
+        if (node.getNext() != null) {
+            node.getNext().setPrev(node.getPrev());
         }
 
-        map.remove(node.value.getId());
+        map.remove(node.getValue().getId());
     }
 
-    public Node<Task> getById(int id) {
+    public Node getById(int id) {
         return map.get(id);
     }
 
@@ -89,8 +76,8 @@ class CustomLinkedList {
 
         List<Task> list = new ArrayList<>();
 
-        for (Node<Task> node : map.values()) {
-            list.add(node.value);
+        for (Node node : map.values()) {
+            list.add(node.getValue());
         }
 
         return list;
