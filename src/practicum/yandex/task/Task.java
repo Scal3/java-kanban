@@ -1,5 +1,7 @@
 package practicum.yandex.task;
 
+import practicum.yandex.manager.TaskTypes;
+
 import java.util.Objects;
 
 public class Task {
@@ -70,11 +72,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "id='" + id + '\'' +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status='" + status + '\'' +
-                '}';
+        return id + "," + TaskTypes.TASK.name() + "," + name + "," + status + "," + description;
     }
 }

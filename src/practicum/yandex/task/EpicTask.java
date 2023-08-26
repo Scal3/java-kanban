@@ -1,5 +1,7 @@
 package practicum.yandex.task;
 
+import practicum.yandex.manager.TaskTypes;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -36,16 +38,6 @@ public class EpicTask extends Task {
 
     @Override
     public String toString() {
-        String result = "EpicTask{" +
-                "id='" + id + '\'' +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status='" + status + '\'';
-
-        result += subtasks != null
-                ? ", subtasks=" + subtasks + '\''
-                : ", subtasks='null" + '\'';
-
-        return result + '}';
+        return id + "," + TaskTypes.EPIC.name() + "," + name + "," + status + "," + description;
     }
 }

@@ -213,11 +213,11 @@ public class InMemoryTaskManager implements TaskManager {
         return historyManager.getHistory();
     }
 
-    private void addToTasksHistory(Task task) {
+    protected void addToTasksHistory(Task task) {
         historyManager.add(task);
     }
 
-    private void removeFromTasksHistory(int id) {
+    protected void removeFromTasksHistory(int id) {
         historyManager.remove(id);
     }
 

@@ -1,5 +1,7 @@
 package practicum.yandex.task;
 
+import practicum.yandex.manager.TaskTypes;
+
 import java.util.Objects;
 
 public class SubTask extends Task {
@@ -35,16 +37,11 @@ public class SubTask extends Task {
 
     @Override
     public String toString() {
-        String result = "SubTask{" +
-                "id='" + id + '\'' +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", status='" + status + '\'';
-
-        result += epicTaskReference != null
-                ? ", epicTaskReferenceName=" + epicTaskReference.name + '\''
-                : ", epicTaskReferenceName='null" + '\'';
-
-        return result + '}';
+        return id + ","
+                + TaskTypes.SUBTASK.name() + ","
+                + name + ","
+                + status + ","
+                + description + ","
+                + epicTaskReference.id;
     }
 }
