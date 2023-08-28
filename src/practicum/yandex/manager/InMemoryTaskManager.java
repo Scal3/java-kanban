@@ -7,11 +7,11 @@ import practicum.yandex.task.Task;
 import java.util.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final Map<Integer, Task> tasks;
-    private final Map<Integer, EpicTask> epicTasks;
-    private final Map<Integer, SubTask> subTasks;
-    private final HistoryManager historyManager;
-    private int taskId;
+    protected final Map<Integer, Task> tasks;
+    protected final Map<Integer, EpicTask> epicTasks;
+    protected final Map<Integer, SubTask> subTasks;
+    protected final HistoryManager historyManager;
+    protected int taskId;
 
     public InMemoryTaskManager() {
         tasks = new HashMap<>();
@@ -105,15 +105,18 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
 
+        int epicId = ++taskId;
+        task.setId(epicId);
+        epicTasks.put(taskId, task);
+
         if (!task.getSubtasks().isEmpty()) {
             for (SubTask sub : task.getSubtasks()) {
+                sub.setEpicId(epicId);
                 createSubTask(sub);
             }
         }
 
         calculateEpicTaskStatus(task);
-        task.setId(++taskId);
-        epicTasks.put(taskId, task);
     }
 
     @Override
@@ -124,7 +127,7 @@ public class InMemoryTaskManager implements TaskManager {
 
         task.setId(++taskId);
         subTasks.put(taskId, task);
-        calculateEpicTaskStatus(task.getEpicTaskReference());
+        calculateEpicTaskStatus(epicTasks.get(task.getEpicId()));
     }
 
     @Override
@@ -160,7 +163,7 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
 
-        calculateEpicTaskStatus(task.getEpicTaskReference());
+        calculateEpicTaskStatus(getEpicTaskById(task.getEpicId()));
         subTasks.put(task.getId(), task);
     }
 
@@ -195,7 +198,7 @@ public class InMemoryTaskManager implements TaskManager {
             return;
         }
 
-        EpicTask epic = subTasks.get(id).getEpicTaskReference();
+        EpicTask epic = getEpicTaskById(subTasks.get(id).getEpicId());
 
         epic.getSubtasks().remove(subTasks.get(id));
         subTasks.remove(id);

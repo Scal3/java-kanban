@@ -1,4 +1,4 @@
-package practicum.yandex.manager;
+package practicum.yandex.task;
 
 public enum TaskTypes {
     TASK,

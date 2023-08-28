@@ -3,6 +3,7 @@ package practicum.yandex.manager;
 import practicum.yandex.task.EpicTask;
 import practicum.yandex.task.SubTask;
 import practicum.yandex.task.Task;
+import practicum.yandex.task.TaskTypes;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -10,13 +11,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class FileBackedTasksManager extends InMemoryTaskManager implements TaskManager {
+public class FileBackedTasksManager extends InMemoryTaskManager {
     private static final String SAVE_FILE_EXCEPTION = "Ошибка сохранения файла";
     private static final String FILE_HEADER = "id,type,name,status,description,epic";
     private final File file;
 
     public FileBackedTasksManager(File file) {
         this.file = file;
+    }
+
+    public static void main(String[] args) {
+        File file = new File("../../test.csv");
+        TaskManager manager = new FileBackedTasksManager(file);
+        Task task1 = new Task("task1", "task1", "NEW");
+        Task task2 = new Task("task2", "task2", "NEW");
+        List<SubTask> subs = new ArrayList<>();
+        EpicTask epic = new EpicTask("epic", "epic", "NEW", subs);
+        SubTask sub1 = new SubTask("sub1", "sub1", "DONE", null);
+        SubTask sub2 = new SubTask("sub2", "sub2", "DONE", null);
+
+        subs.add(sub1);
+        subs.add(sub2);
+
+        manager.createTask(task1);
+        manager.createTask(task2);
+        manager.createEpicTask(epic);
+
+        manager.getTaskById(1);
+        manager.getTaskById(2);
+
+        TaskManager manager2 = FileBackedTasksManager.loadFromFile(file);
+        System.out.println(manager2.getEpicTasksValues());
+        System.out.println(manager2.getTasksValues());
+        System.out.println(manager2.getSubTasksValues());
     }
 
     public static FileBackedTasksManager loadFromFile(File file) {
@@ -38,7 +65,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
                                 || line.contains(TaskTypes.EPIC.name())
                                 || line.contains(TaskTypes.SUBTASK.name())
                 ) {
-                    tasks.add(createTaskFromString(line));
+                    tasks.add(manager.createTaskFromString(line));
                 } else {
                     history = createHistoryFromString(line);
                 }
@@ -48,13 +75,20 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         }
 
         for (Task task : tasks) {
-            if (task instanceof EpicTask) {
-                manager.createEpicTask((EpicTask) task);
-            } else if (task instanceof SubTask) {
-                manager.createSubTask((SubTask) task);
+            if (task.getType().equals(TaskTypes.EPIC.name())) {
+                manager.epicTasks.put(task.getId(), (EpicTask) task);
+            } else if (task.getType().equals(TaskTypes.SUBTASK.name())) {
+                manager.subTasks.put(task.getId(), (SubTask) task);
             } else {
-                manager.createTask(task);
+                manager.tasks.put(task.getId(), task);
             }
+        }
+
+        for (SubTask sub : manager.subTasks.values()) {
+            EpicTask epic = manager.epicTasks.get(sub.getEpicId());
+            List<SubTask> subs = epic.getSubtasks();
+            subs.add(sub);
+            epic.setSubtasks(subs);
         }
 
         for (Integer id : history) {
@@ -67,10 +101,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
             }
         }
 
+        // Примерно вот тут нужно восстановить taskId из InMemoryTaskManager
+        // Это максимальное id у задач
         return manager;
     }
 
-    private static Task createTaskFromString(String line) {
+    private Task createTaskFromString(String line) {
         String[] lineArr = line.split(",");
 
         if (lineArr[1].equals(TaskTypes.TASK.name())) {
@@ -84,6 +120,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
 
             return task;
         } else {
+            // Как получить тут epicId?
             SubTask task = new SubTask(lineArr[2], lineArr[4], lineArr[3], null);
             task.setId(Integer.parseInt(lineArr[0]));
 
@@ -100,6 +137,30 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
         }
 
         return history;
+    }
+
+    @Override
+    public Task getTaskById(int id) {
+        Task task = super.getTaskById(id);
+        save();
+
+        return task;
+    }
+
+    @Override
+    public EpicTask getEpicTaskById(int id) {
+        EpicTask task = super.getEpicTaskById(id);
+        save();
+
+        return task;
+    }
+
+    @Override
+    public SubTask getSubTaskById(int id) {
+        SubTask task = super.getSubTaskById(id);
+        save();
+
+        return task;
     }
 
     @Override
@@ -171,18 +232,6 @@ public class FileBackedTasksManager extends InMemoryTaskManager implements TaskM
     @Override
     public void deleteSubTaskById(int id) {
         super.deleteSubTaskById(id);
-        save();
-    }
-
-    @Override
-    protected void addToTasksHistory(Task task) {
-        super.addToTasksHistory(task);
-        save();
-    }
-
-    @Override
-    protected void removeFromTasksHistory(int id) {
-        super.removeFromTasksHistory(id);
         save();
     }
 

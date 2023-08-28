@@ -1,25 +1,27 @@
 package practicum.yandex.task;
 
-import practicum.yandex.manager.TaskTypes;
-
 import java.util.Objects;
 
 public class SubTask extends Task {
-    private EpicTask epicTaskReference;
+    private Integer epicId;
+    private final String type = TaskTypes.SUBTASK.name();
 
-    public SubTask(String name, String description, String status, EpicTask epicTaskReference) {
+    public SubTask(String name, String description, String status, Integer epicId) {
         super(name, description, status);
 
-        this.epicTaskReference = epicTaskReference;
+        this.epicId = epicId;
     }
 
-    public EpicTask getEpicTaskReference() {
-        return epicTaskReference;
+    public Integer getEpicId() {
+        return epicId;
     }
 
-    public void setEpicTaskReference(EpicTask epicTaskReference) {
-        this.epicTaskReference = epicTaskReference;
+    public void setEpicId(Integer epicId) {
+        this.epicId = epicId;
     }
+
+    @Override
+    public String getType() { return type; }
 
     @Override
     public boolean equals(Object o) {
@@ -27,21 +29,21 @@ public class SubTask extends Task {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         SubTask subTask = (SubTask) o;
-        return Objects.equals(epicTaskReference, subTask.epicTaskReference);
+        return Objects.equals(epicId, subTask.epicId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), epicTaskReference);
+        return Objects.hash(super.hashCode(), epicId);
     }
 
     @Override
     public String toString() {
         return id + ","
-                + TaskTypes.SUBTASK.name() + ","
+                + type + ","
                 + name + ","
                 + status + ","
                 + description + ","
-                + epicTaskReference.id;
+                + epicId;
     }
 }

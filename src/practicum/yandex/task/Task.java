@@ -1,7 +1,5 @@
 package practicum.yandex.task;
 
-import practicum.yandex.manager.TaskTypes;
-
 import java.util.Objects;
 
 public class Task {
@@ -9,6 +7,7 @@ public class Task {
     protected String description;
     protected String status;
     protected Integer id;
+    protected final String type = TaskTypes.TASK.name();
 
     public Task(String name, String description, String status) {
         this.name = name;
@@ -48,6 +47,10 @@ public class Task {
         this.status = status;
     }
 
+    public String getType() {
+        return type;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -72,6 +75,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return id + "," + TaskTypes.TASK.name() + "," + name + "," + status + "," + description;
+        return id + "," + type + "," + name + "," + status + "," + description;
     }
 }

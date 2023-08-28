@@ -1,12 +1,11 @@
 package practicum.yandex.task;
 
-import practicum.yandex.manager.TaskTypes;
-
 import java.util.List;
 import java.util.Objects;
 
 public class EpicTask extends Task {
     private List<SubTask> subtasks;
+    private final String type = TaskTypes.EPIC.name();
 
     public EpicTask(String name, String description, String status, List<SubTask> subtasks) {
         super(name, description, status);
@@ -21,6 +20,9 @@ public class EpicTask extends Task {
     public void setSubtasks(List<SubTask> subtasks) {
         this.subtasks = subtasks;
     }
+
+    @Override
+    public String getType() { return type; }
 
     @Override
     public boolean equals(Object o) {
@@ -38,6 +40,6 @@ public class EpicTask extends Task {
 
     @Override
     public String toString() {
-        return id + "," + TaskTypes.EPIC.name() + "," + name + "," + status + "," + description;
+        return id + "," + type + "," + name + "," + status + "," + description;
     }
 }
