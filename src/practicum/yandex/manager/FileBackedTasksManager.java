@@ -48,6 +48,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
     public static FileBackedTasksManager loadFromFile(File file) {
         FileBackedTasksManager manager = new FileBackedTasksManager(file);
+        int taskId = 0;
         List<Task> tasks = new ArrayList<>();
         List<Integer> history = new ArrayList<>();
 
@@ -82,6 +83,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             } else {
                 manager.tasks.put(task.getId(), task);
             }
+
+            taskId = taskId < task.getId() ? task.getId() : taskId;
         }
 
         for (SubTask sub : manager.subTasks.values()) {
@@ -92,40 +95,18 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
 
         for (Integer id : history) {
-            if (manager.getTaskById(id) != null) {
-                manager.addToTasksHistory(manager.getTaskById(id));
-            } else if (manager.getEpicTaskById(id) != null) {
-                manager.addToTasksHistory(manager.getEpicTaskById(id));
+            if (manager.tasks.containsKey(id)) {
+                manager.historyManager.add(manager.tasks.get(id));
+            } else if (manager.epicTasks.containsKey(id)) {
+                manager.historyManager.add(manager.epicTasks.get(id));
             } else {
-                manager.addToTasksHistory(manager.getSubTaskById(id));
+                manager.historyManager.add(manager.subTasks.get(id));
             }
         }
 
-        // Примерно вот тут нужно восстановить taskId из InMemoryTaskManager
-        // Это максимальное id у задач
+        manager.taskId = taskId;
+
         return manager;
-    }
-
-    private Task createTaskFromString(String line) {
-        String[] lineArr = line.split(",");
-
-        if (lineArr[1].equals(TaskTypes.TASK.name())) {
-            Task task = new Task(lineArr[2], lineArr[4], lineArr[3]);
-            task.setId(Integer.parseInt(lineArr[0]));
-
-            return task;
-        } else if (lineArr[1].equals(TaskTypes.EPIC.name())) {
-            EpicTask task = new EpicTask(lineArr[2], lineArr[4], lineArr[3], new ArrayList<>());
-            task.setId(Integer.parseInt(lineArr[0]));
-
-            return task;
-        } else {
-            // Как получить тут epicId?
-            SubTask task = new SubTask(lineArr[2], lineArr[4], lineArr[3], null);
-            task.setId(Integer.parseInt(lineArr[0]));
-
-            return task;
-        }
     }
 
     private static List<Integer> createHistoryFromString(String line) {
@@ -267,5 +248,26 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         }
 
         return builder.toString();
+    }
+
+    private Task createTaskFromString(String line) {
+        String[] lineArr = line.split(",");
+
+        if (lineArr[1].equals(TaskTypes.TASK.name())) {
+            Task task = new Task(lineArr[2], lineArr[4], lineArr[3]);
+            task.setId(Integer.parseInt(lineArr[0]));
+
+            return task;
+        } else if (lineArr[1].equals(TaskTypes.EPIC.name())) {
+            EpicTask task = new EpicTask(lineArr[2], lineArr[4], lineArr[3], new ArrayList<>());
+            task.setId(Integer.parseInt(lineArr[0]));
+
+            return task;
+        } else {
+            SubTask task = new SubTask(lineArr[2], lineArr[4], lineArr[3], Integer.parseInt(lineArr[5]));
+            task.setId(Integer.parseInt(lineArr[0]));
+
+            return task;
+        }
     }
 }
