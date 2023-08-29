@@ -21,7 +21,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     public static void main(String[] args) {
-        File file = new File("../../test.csv");
+        File file = new File("./test.csv");
         TaskManager manager = new FileBackedTasksManager(file);
         Task task1 = new Task("task1", "task1", "NEW");
         Task task2 = new Task("task2", "task2", "NEW");
@@ -54,7 +54,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         try (
                 Reader fileReader = new FileReader(file, StandardCharsets.UTF_8);
-                BufferedReader br = new BufferedReader(fileReader);
+                BufferedReader br = new BufferedReader(fileReader)
         ) {
             while (br.ready()) {
                 String line = br.readLine();
@@ -89,9 +89,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
         for (SubTask sub : manager.subTasks.values()) {
             EpicTask epic = manager.epicTasks.get(sub.getEpicId());
-            List<SubTask> subs = epic.getSubtasks();
-            subs.add(sub);
-            epic.setSubtasks(subs);
+            epic.getSubtasks().add(sub);
         }
 
         for (Integer id : history) {
