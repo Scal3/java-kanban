@@ -12,7 +12,7 @@ import java.util.List;
 
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
-    private static final String SAVE_FILE_EXCEPTION = "Ошибка сохранения файла";
+    private static final String SAVE_FILE_EXCEPTION = "Save file exception";
     private static final String FILE_HEADER = "id,type,name,status,description,epic";
     private final File file;
 

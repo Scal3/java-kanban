@@ -121,12 +121,19 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createSubTask(SubTask task) {
-        if (task == null) {
+        if (task == null || epicTasks.get(task.getEpicId()) == null) {
             return;
         }
 
         task.setId(++taskId);
         subTasks.put(taskId, task);
+
+        if (!epicTasks.get(task.getEpicId()).getSubtasks().contains(task)) {
+            List<SubTask> epicsSubs = epicTasks.get(task.getEpicId()).getSubtasks();
+            epicsSubs.add(task);
+            epicTasks.get(task.getEpicId()).setSubtasks(epicsSubs);
+        }
+
         calculateEpicTaskStatus(epicTasks.get(task.getEpicId()));
     }
 
@@ -225,6 +232,8 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     private void calculateEpicTaskStatus(EpicTask task) {
+        if (task == null) return;
+
         if (task.getSubtasks() == null || task.getSubtasks().isEmpty()) {
             task.setStatus(Statuses.NEW.name());
         } else {
