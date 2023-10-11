@@ -10,6 +10,8 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void add(Task task) {
+        if (task == null || task.getId() == null) return;
+
         if (tasksHistory.contains(task.getId())) {
             tasksHistory.removeNode(tasksHistory.getById(task.getId()));
         }

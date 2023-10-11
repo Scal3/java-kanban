@@ -1,10 +1,12 @@
-package practicum.yandex.task;
+package practicum.yandex.task.test;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import practicum.yandex.manager.InMemoryTaskManager;
 import practicum.yandex.manager.Statuses;
 import practicum.yandex.manager.TaskManager;
+import practicum.yandex.task.EpicTask;
+import practicum.yandex.task.SubTask;
 
 import java.util.Collections;
 import java.util.List;
@@ -29,7 +31,7 @@ class EpicTaskTest {
                 Collections.emptyList()
             )
         );
-        assertEquals(Statuses.NEW.name(), manager.getEpicTaskById(1).status);
+        assertEquals(Statuses.NEW.name(), manager.getEpicTaskById(1).getStatus());
     }
 
     @Test
@@ -45,7 +47,7 @@ class EpicTaskTest {
                         )
                 )
         );
-        assertEquals(Statuses.NEW.name(), manager.getEpicTaskById(1).status);
+        assertEquals(Statuses.NEW.name(), manager.getEpicTaskById(1).getStatus());
     }
 
     @Test
@@ -61,7 +63,7 @@ class EpicTaskTest {
                         )
                 )
         );
-        assertEquals(Statuses.DONE.name(), manager.getEpicTaskById(1).status);
+        assertEquals(Statuses.DONE.name(), manager.getEpicTaskById(1).getStatus());
     }
 
     @Test
@@ -77,7 +79,7 @@ class EpicTaskTest {
                         )
                 )
         );
-        assertEquals(Statuses.IN_PROGRESS.name(), manager.getEpicTaskById(1).status);
+        assertEquals(Statuses.IN_PROGRESS.name(), manager.getEpicTaskById(1).getStatus());
     }
 
     @Test
@@ -93,6 +95,6 @@ class EpicTaskTest {
                         )
                 )
         );
-        assertEquals(Statuses.DONE.name(), manager.getEpicTaskById(1).status);
+        assertEquals(Statuses.DONE.name(), manager.getEpicTaskById(1).getStatus());
     }
 }
