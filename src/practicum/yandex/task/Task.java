@@ -1,5 +1,7 @@
 package practicum.yandex.task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Task {
@@ -8,6 +10,8 @@ public class Task {
     protected String status;
     protected Integer id;
     protected final String type = TaskTypes.TASK.name();
+    protected Duration duration;
+    protected LocalDateTime startTime;
 
     public Task(String name, String description, String status) {
         this.name = name;
@@ -49,6 +53,26 @@ public class Task {
 
     public String getType() {
         return type;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    public LocalDateTime getEndTime() {
+        return startTime.plus(duration);
     }
 
     @Override

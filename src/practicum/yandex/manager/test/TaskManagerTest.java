@@ -7,6 +7,8 @@ import practicum.yandex.task.EpicTask;
 import practicum.yandex.task.SubTask;
 import practicum.yandex.task.Task;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
@@ -82,10 +84,16 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.createEpicTask(new EpicTask(
                 "epic", "epic", Statuses.NEW.name(), Collections.emptyList()
         ));
-        SubTask[] tasks = new SubTask[]{
-                new SubTask("sub1", "sub1", Statuses.NEW.name(), 1),
-                new SubTask("sub2", "sub2", Statuses.NEW.name(), 1)
-        };
+
+        SubTask sub1 = new SubTask("sub1", "sub1", Statuses.NEW.name(), 1);
+        sub1.setDuration(Duration.ofSeconds(100));
+        sub1.setStartTime(LocalDateTime.now());
+
+        SubTask sub2 = new SubTask("sub2", "sub2", Statuses.NEW.name(), 1);
+        sub2.setDuration(Duration.ofSeconds(100));
+        sub2.setStartTime(LocalDateTime.now());
+
+        SubTask[] tasks = new SubTask[]{ sub1, sub2 };
         manager.createSubTask(tasks[0]);
         manager.createSubTask(tasks[1]);
         assertArrayEquals(tasks, manager.getSubTasksValues().toArray());
@@ -191,7 +199,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.createEpicTask(
                 new EpicTask("epic", "epic", Statuses.NEW.name(), Collections.emptyList())
         );
+
         SubTask sub = new SubTask("sub", "sub", Statuses.NEW.name(), 1);
+        sub.setDuration(Duration.ofSeconds(100));
+        sub.setStartTime(LocalDateTime.now());
+
         manager.createSubTask(sub);
         assertEquals(sub, manager.getSubTaskById(2));
     }
@@ -241,7 +253,11 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.createEpicTask(
                 new EpicTask("epic", "epic", Statuses.NEW.name(), Collections.emptyList())
         );
+
         SubTask sub = new SubTask("sub", "sub", Statuses.NEW.name(), 1);
+        sub.setDuration(Duration.ofSeconds(100));
+        sub.setStartTime(LocalDateTime.now());
+
         manager.createSubTask(sub);
         assertEquals(sub, manager.getSubTaskById(2));
     }
@@ -296,10 +312,17 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.createEpicTask(
                 new EpicTask("epic", "epic", Statuses.NEW.name(), Collections.emptyList())
         );
-        manager.createSubTask(new SubTask("sub", "sub", Statuses.NEW.name(), 1));
+
+        SubTask sub = new SubTask("sub", "sub", Statuses.NEW.name(), 1);
+        sub.setDuration(Duration.ofSeconds(100));
+        sub.setStartTime(LocalDateTime.now());
+
+        manager.createSubTask(sub);
+
         SubTask updatedSubTask = manager.getSubTaskById(2);
         updatedSubTask.setName("updated");
         updatedSubTask.setDescription("updated");
+
         manager.updateSubTask(updatedSubTask);
         assertEquals(updatedSubTask, manager.getSubTaskById(2));
     }
@@ -386,8 +409,17 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.createEpicTask(
                 new EpicTask("epic", "epic", Statuses.NEW.name(), Collections.emptyList())
         );
-        manager.createSubTask(new SubTask("sub1", "sub1", Statuses.NEW.name(), 1));
-        manager.createSubTask(new SubTask("sub2", "sub2", Statuses.NEW.name(), 1));
+
+        SubTask sub1 = new SubTask("sub1", "sub1", Statuses.NEW.name(), 1);
+        sub1.setDuration(Duration.ofSeconds(100));
+        sub1.setStartTime(LocalDateTime.now());
+
+        SubTask sub2 = new SubTask("sub2", "sub2", Statuses.NEW.name(), 1);
+        sub2.setDuration(Duration.ofSeconds(100));
+        sub2.setStartTime(LocalDateTime.now());
+
+        manager.createSubTask(sub1);
+        manager.createSubTask(sub2);
         assertArrayEquals(manager.getSubTasksValues().toArray(), manager.getEpicSubTasks(1).toArray());
     }
 
@@ -410,8 +442,17 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.createEpicTask(
                 new EpicTask("epic", "epic", Statuses.NEW.name(), Collections.emptyList())
         );
-        manager.createSubTask(new SubTask("sub1", "sub1", Statuses.NEW.name(), 1));
-        manager.createSubTask(new SubTask("sub2", "sub2", Statuses.NEW.name(), 1));
+
+        SubTask sub1 = new SubTask("sub1", "sub1", Statuses.NEW.name(), 1);
+        sub1.setStartTime(LocalDateTime.now());
+        sub1.setDuration(Duration.ofSeconds(100));
+
+        SubTask sub2 = new SubTask("sub2", "sub2", Statuses.NEW.name(), 1);
+        sub2.setStartTime(LocalDateTime.now());
+        sub2.setDuration(Duration.ofSeconds(100));
+
+        manager.createSubTask(sub1);
+        manager.createSubTask(sub2);
         assertEquals(Statuses.NEW.name(), manager.getEpicTaskById(1).getStatus());
     }
 
@@ -420,8 +461,17 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.createEpicTask(
                 new EpicTask("epic", "epic", Statuses.NEW.name(), Collections.emptyList())
         );
-        manager.createSubTask(new SubTask("sub1", "sub1", Statuses.NEW.name(), 1));
-        manager.createSubTask(new SubTask("sub2", "sub2", Statuses.DONE.name(), 1));
+
+        SubTask sub1 = new SubTask("sub1", "sub1", Statuses.NEW.name(), 1);
+        sub1.setDuration(Duration.ofSeconds(100));
+        sub1.setStartTime(LocalDateTime.now());
+
+        SubTask sub2 = new SubTask("sub2", "sub2", Statuses.DONE.name(), 1);
+        sub2.setDuration(Duration.ofSeconds(100));
+        sub2.setStartTime(LocalDateTime.now());
+
+        manager.createSubTask(sub1);
+        manager.createSubTask(sub2);
         assertEquals(Statuses.IN_PROGRESS.name(), manager.getEpicTaskById(1).getStatus());
     }
 
@@ -430,8 +480,17 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.createEpicTask(
                 new EpicTask("epic", "epic", Statuses.NEW.name(), Collections.emptyList())
         );
-        manager.createSubTask(new SubTask("sub1", "sub1", Statuses.DONE.name(), 1));
-        manager.createSubTask(new SubTask("sub2", "sub2", Statuses.DONE.name(), 1));
+
+        SubTask sub1 = new SubTask("sub1", "sub1", Statuses.DONE.name(), 1);
+        sub1.setStartTime(LocalDateTime.now());
+        sub1.setDuration(Duration.ofSeconds(100));
+
+        SubTask sub2 = new SubTask("sub2", "sub2", Statuses.DONE.name(), 1);
+        sub2.setStartTime(LocalDateTime.now());
+        sub2.setDuration(Duration.ofSeconds(100));
+
+        manager.createSubTask(sub1);
+        manager.createSubTask(sub2);
         assertEquals(Statuses.DONE.name(), manager.getEpicTaskById(1).getStatus());
     }
 
@@ -441,7 +500,12 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         manager.createEpicTask(
                 new EpicTask("epic", "epic", Statuses.NEW.name(), Collections.emptyList())
         );
-        manager.createSubTask(new SubTask("sub1", "sub1", Statuses.DONE.name(), 1));
+
+        SubTask sub = new SubTask("sub1", "sub1", Statuses.NEW.name(), 1);
+        sub.setDuration(Duration.ofSeconds(100));
+        sub.setStartTime(LocalDateTime.now());
+
+        manager.createSubTask(sub);
         assertEquals(1, manager.getSubTasksValues().size());
     }
 

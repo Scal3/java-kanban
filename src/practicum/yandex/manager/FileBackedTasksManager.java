@@ -59,7 +59,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
             while (br.ready()) {
                 String line = br.readLine();
 
-                if (line.contains(FILE_HEADER) || line.equals("")) continue;
+                if (line.contains(FILE_HEADER) || line.isEmpty()) continue;
 
                 if (
                         line.contains(TaskTypes.TASK.name())
