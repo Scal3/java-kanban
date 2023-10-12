@@ -99,6 +99,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return id + "," + type + "," + name + "," + status + "," + description;
+        return id + "," + type + "," + name + "," + status + "," + description + "," + startTime + "," + duration;
     }
 }

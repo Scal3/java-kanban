@@ -7,13 +7,15 @@ import practicum.yandex.task.TaskTypes;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     private static final String SAVE_FILE_EXCEPTION = "Save file exception";
-    private static final String FILE_HEADER = "id,type,name,status,description,epic";
+    private static final String FILE_HEADER = "id,type,name,status,description,startTime,duration,epic";
     private final File file;
 
     public FileBackedTasksManager(File file) {
@@ -254,6 +256,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         if (lineArr[1].equals(TaskTypes.TASK.name())) {
             Task task = new Task(lineArr[2], lineArr[4], lineArr[3]);
             task.setId(Integer.parseInt(lineArr[0]));
+            task.setStartTime(LocalDateTime.parse(lineArr[5]));
+            task.setDuration(Duration.parse(lineArr[6]));
 
             return task;
         } else if (lineArr[1].equals(TaskTypes.EPIC.name())) {
@@ -262,8 +266,10 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
 
             return task;
         } else {
-            SubTask task = new SubTask(lineArr[2], lineArr[4], lineArr[3], Integer.parseInt(lineArr[5]));
+            SubTask task = new SubTask(lineArr[2], lineArr[4], lineArr[3], Integer.parseInt(lineArr[7]));
             task.setId(Integer.parseInt(lineArr[0]));
+            task.setStartTime(LocalDateTime.parse(lineArr[5]));
+            task.setDuration(Duration.parse(lineArr[6]));
 
             return task;
         }

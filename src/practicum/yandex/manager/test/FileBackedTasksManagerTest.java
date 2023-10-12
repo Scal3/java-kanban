@@ -8,6 +8,8 @@ import practicum.yandex.task.EpicTask;
 import practicum.yandex.task.Task;
 
 import java.io.File;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,9 +28,21 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
     // Get data from file
     @Test
     public void shouldCreateAllTasksFromFileWhenTasksAreInFile() {
-        manager.createTask(new Task("task1", "task1", Statuses.NEW.name()));
-        manager.createTask(new Task("task2", "task2", Statuses.NEW.name()));
-        manager.createTask(new Task("task3", "task3", Statuses.NEW.name()));
+        Task task1 = new Task("task1", "task1", Statuses.NEW.name());
+        task1.setStartTime(LocalDateTime.now());
+        task1.setDuration(Duration.ofSeconds(500));
+
+        Task task2 = new Task("task2", "task2", Statuses.NEW.name());
+        task2.setStartTime(LocalDateTime.now());
+        task2.setDuration(Duration.ofSeconds(500));
+
+        Task task3 = new Task("task3", "task3", Statuses.NEW.name());
+        task3.setStartTime(LocalDateTime.now());
+        task3.setDuration(Duration.ofSeconds(500));
+
+        manager.createTask(task1);
+        manager.createTask(task2);
+        manager.createTask(task3);
         assertArrayEquals(
                 manager.getTasksValues().toArray(),
                 FileBackedTasksManager.loadFromFile(FILE).getTasksValues().toArray()
@@ -63,9 +77,21 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
     // Save in file
     @Test
     public void shouldSaveTasksAllTasksInFile() {
-        manager.createTask(new Task("task1", "task1", Statuses.NEW.name()));
-        manager.createTask(new Task("task2", "task2", Statuses.NEW.name()));
-        manager.createTask(new Task("task3", "task3", Statuses.NEW.name()));
+        Task task1 = new Task("task1", "task1", Statuses.NEW.name());
+        task1.setStartTime(LocalDateTime.now());
+        task1.setDuration(Duration.ofSeconds(500));
+
+        Task task2 = new Task("task2", "task2", Statuses.NEW.name());
+        task2.setStartTime(LocalDateTime.now());
+        task2.setDuration(Duration.ofSeconds(500));
+
+        Task task3 = new Task("task3", "task3", Statuses.NEW.name());
+        task3.setStartTime(LocalDateTime.now());
+        task3.setDuration(Duration.ofSeconds(500));
+
+        manager.createTask(task1);
+        manager.createTask(task2);
+        manager.createTask(task3);
         assertArrayEquals(
                 manager.getTasksValues().toArray(),
                 FileBackedTasksManager.loadFromFile(FILE).getTasksValues().toArray()
