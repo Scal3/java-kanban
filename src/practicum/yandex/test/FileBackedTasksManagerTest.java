@@ -1,4 +1,4 @@
-package practicum.yandex.manager.test;
+package practicum.yandex.test;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,11 +18,9 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
     private static final File FILE = new File("./test.csv");
 
     @BeforeEach
-    public void makeNewManager() {
+    @Override
+    public void makeManager() {
         manager = new FileBackedTasksManager(FILE);
-        manager.deleteAllTasks();
-        manager.deleteAllEpicTasks();
-        manager.deleteAllSubTasks();
     }
 
     // Get data from file

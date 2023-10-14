@@ -1,4 +1,4 @@
-package practicum.yandex.manager.test;
+package practicum.yandex.test;
 
 import org.junit.jupiter.api.Test;
 import practicum.yandex.manager.Statuses;
@@ -16,6 +16,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public abstract class TaskManagerTest<T extends TaskManager> {
     T manager;
+
+    public abstract void makeManager();
 
     // getHistory
     @Test

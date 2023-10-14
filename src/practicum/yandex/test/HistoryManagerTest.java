@@ -1,4 +1,4 @@
-package practicum.yandex.manager.test;
+package practicum.yandex.test;
 
 import org.junit.jupiter.api.Test;
 import practicum.yandex.manager.HistoryManager;

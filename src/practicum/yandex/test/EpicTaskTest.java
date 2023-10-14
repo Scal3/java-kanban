@@ -1,4 +1,4 @@
-package practicum.yandex.task.test;
+package practicum.yandex.test;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
