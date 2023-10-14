@@ -1,5 +1,6 @@
 package practicum.yandex.task;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,36 @@ public class EpicTask extends Task {
 
     public void setEndTime(LocalDateTime endTime) {
         this.endTime = endTime;
+    }
+
+    public void calculateTimes() {
+        Duration duration = Duration.ofSeconds(0);
+
+        for (SubTask sub : getSubtasks()) {
+            duration = duration.plus(sub.getDuration());
+        }
+
+        setDuration(duration);
+
+        LocalDateTime epicStartTime = null;
+
+        for (SubTask sub : getSubtasks()) {
+            if (epicStartTime == null) epicStartTime = sub.getStartTime();
+
+            if (epicStartTime.isAfter(sub.getStartTime())) epicStartTime = sub.getStartTime();
+        }
+
+        setStartTime(epicStartTime);
+
+        LocalDateTime epicEndTime = null;
+
+        for (SubTask sub : getSubtasks()) {
+            if (epicEndTime == null) epicEndTime = sub.getEndTime();
+
+            if (epicEndTime.isBefore(sub.getEndTime())) epicEndTime = sub.getEndTime();
+        }
+
+        setEndTime(epicEndTime);
     }
 
     @Override

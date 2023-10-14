@@ -300,7 +300,7 @@ public class InMemoryTaskManager implements TaskManager {
         if (task == null) return;
 
         calculateEpicTaskStatus(task);
-        calculateEpicTaskDuration(task);
+        task.calculateTimes();
     }
 
     private void calculateEpicTaskStatus(EpicTask epic) {
@@ -332,36 +332,6 @@ public class InMemoryTaskManager implements TaskManager {
                 epic.setStatus(Statuses.IN_PROGRESS.name());
             }
         }
-    }
-
-    private void calculateEpicTaskDuration(EpicTask epic) {
-        Duration duration = Duration.ofSeconds(0);
-
-        for (SubTask sub : epic.getSubtasks()) {
-            duration = duration.plus(sub.getDuration());
-        }
-
-        epic.setDuration(duration);
-
-        LocalDateTime epicStartTime = null;
-
-        for (SubTask sub : epic.getSubtasks()) {
-            if (epicStartTime == null) epicStartTime = sub.getStartTime();
-
-            if (epicStartTime.isAfter(sub.getStartTime())) epicStartTime = sub.getStartTime();
-        }
-
-        epic.setStartTime(epicStartTime);
-
-        LocalDateTime epicEndTime = null;
-
-        for (SubTask sub : epic.getSubtasks()) {
-            if (epicEndTime == null) epicEndTime = sub.getEndTime();
-
-            if (epicEndTime.isBefore(sub.getEndTime())) epicEndTime = sub.getEndTime();
-        }
-
-        epic.setEndTime(epicEndTime);
     }
 
     private boolean validateTaskByEndTime(LocalDateTime taskEndTime) {
