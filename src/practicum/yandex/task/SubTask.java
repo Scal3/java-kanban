@@ -4,7 +4,7 @@ import java.util.Objects;
 
 public class SubTask extends Task {
     private Integer epicId;
-    private final String type = TaskTypes.SUBTASK.name();
+    private final TaskTypes type = TaskTypes.SUBTASK;
 
     public SubTask(String name, String description, String status, Integer epicId) {
         super(name, description, status);
@@ -21,7 +21,7 @@ public class SubTask extends Task {
     }
 
     @Override
-    public String getType() { return type; }
+    public TaskTypes getType() { return type; }
 
     @Override
     public boolean equals(Object o) {

@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class EpicTask extends Task {
     private List<SubTask> subtasks;
-    private final String type = TaskTypes.EPIC.name();
+    private final TaskTypes type = TaskTypes.EPIC;
     private LocalDateTime endTime;
 
     public EpicTask(String name, String description, String status, List<SubTask> subtasks) {
@@ -25,7 +25,7 @@ public class EpicTask extends Task {
     }
 
     @Override
-    public String getType() { return type; }
+    public TaskTypes getType() { return type; }
 
     @Override
     public LocalDateTime getEndTime() {
