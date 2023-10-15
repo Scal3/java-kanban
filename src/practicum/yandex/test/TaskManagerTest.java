@@ -9,6 +9,7 @@ import practicum.yandex.task.Task;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Collections;
 import java.util.List;
 
@@ -88,12 +89,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         ));
 
         SubTask sub1 = new SubTask("sub1", "sub1", Statuses.NEW.name(), 1);
-        sub1.setDuration(Duration.ofSeconds(100));
-        sub1.setStartTime(LocalDateTime.now());
-
         SubTask sub2 = new SubTask("sub2", "sub2", Statuses.NEW.name(), 1);
-        sub2.setDuration(Duration.ofSeconds(100));
-        sub2.setStartTime(LocalDateTime.now());
 
         SubTask[] tasks = new SubTask[]{ sub1, sub2 };
         manager.createSubTask(tasks[0]);
@@ -465,12 +461,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         );
 
         SubTask sub1 = new SubTask("sub1", "sub1", Statuses.NEW.name(), 1);
-        sub1.setDuration(Duration.ofSeconds(100));
-        sub1.setStartTime(LocalDateTime.now());
-
         SubTask sub2 = new SubTask("sub2", "sub2", Statuses.DONE.name(), 1);
-        sub2.setDuration(Duration.ofSeconds(100));
-        sub2.setStartTime(LocalDateTime.now());
 
         manager.createSubTask(sub1);
         manager.createSubTask(sub2);
@@ -484,12 +475,7 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         );
 
         SubTask sub1 = new SubTask("sub1", "sub1", Statuses.DONE.name(), 1);
-        sub1.setStartTime(LocalDateTime.now());
-        sub1.setDuration(Duration.ofSeconds(100));
-
         SubTask sub2 = new SubTask("sub2", "sub2", Statuses.DONE.name(), 1);
-        sub2.setStartTime(LocalDateTime.now());
-        sub2.setDuration(Duration.ofSeconds(100));
 
         manager.createSubTask(sub1);
         manager.createSubTask(sub2);
@@ -518,5 +504,31 @@ public abstract class TaskManagerTest<T extends TaskManager> {
         );
         manager.createSubTask(new SubTask("sub1", "sub1", Statuses.DONE.name(), 10));
         assertEquals(0, manager.getSubTasksValues().size());
+    }
+
+    // validateTaskByEndTime
+    @Test
+    public void shouldNotCreateTaskWhenTaskEndTimeIntersectsWithOthersTasks() {
+        Task task1 = new Task("task1", "task1", Statuses.NEW.name());
+        task1.setStartTime(LocalDateTime.of(2023, Month.OCTOBER, 15, 20, 0));
+        task1.setDuration(Duration.ofHours(2));
+
+        Task task2 = new Task("task2", "task2", Statuses.NEW.name());
+        task2.setStartTime(LocalDateTime.of(2023, Month.OCTOBER, 16, 20, 0));
+        task2.setDuration(Duration.ofHours(2));
+
+        Task intersectedTask = new Task("task3", "task3", Statuses.NEW.name());
+        intersectedTask.setStartTime(LocalDateTime.of(2023, Month.OCTOBER, 15, 21, 0));
+        intersectedTask.setDuration(Duration.ofHours(1));
+
+        Task task4 = new Task("task4", "task4", Statuses.NEW.name());
+        task4.setStartTime(LocalDateTime.of(2023, Month.OCTOBER, 16, 23, 0));
+        task4.setDuration(Duration.ofHours(2));
+
+        manager.createTask(task1);
+        manager.createTask(task2);
+        manager.createTask(intersectedTask);
+        manager.createTask(task4);
+        assertEquals(3, manager.getTasksValues().size());
     }
 }

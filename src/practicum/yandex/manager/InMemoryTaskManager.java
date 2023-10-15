@@ -316,7 +316,12 @@ public class InMemoryTaskManager implements TaskManager {
         if (task.getEndTime() == null) return true;
 
         for (Task taskFromPrioritizedTasks : prioritizedTasks) {
-            if (taskFromPrioritizedTasks.getEndTime().equals(task.getEndTime())) return false;
+            if (
+                    task.getEndTime().isAfter(taskFromPrioritizedTasks.getStartTime()) &&
+                            taskFromPrioritizedTasks.getEndTime().isAfter(task.getStartTime())
+            ) {
+                return false;
+            }
         }
 
         return true;

@@ -9,7 +9,7 @@ public class Task {
     protected String description;
     protected String status;
     protected Integer id;
-    protected final TaskTypes type = TaskTypes.TASK;
+    protected TaskTypes type = TaskTypes.TASK;
     protected Duration duration;
     protected LocalDateTime startTime;
 

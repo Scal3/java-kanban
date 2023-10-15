@@ -41,7 +41,9 @@ public class EpicTask extends Task {
         Duration duration = Duration.ofSeconds(0);
 
         for (SubTask sub : getSubtasks()) {
-            duration = duration.plus(sub.getDuration());
+            if (sub.getDuration() != null) {
+                duration = duration.plus(sub.getDuration());
+            }
         }
 
         setDuration(duration);
@@ -49,9 +51,11 @@ public class EpicTask extends Task {
         LocalDateTime epicStartTime = null;
 
         for (SubTask sub : getSubtasks()) {
-            if (epicStartTime == null) epicStartTime = sub.getStartTime();
+            if (sub.getStartTime() != null && epicStartTime == null) epicStartTime = sub.getStartTime();
 
-            if (epicStartTime.isAfter(sub.getStartTime())) epicStartTime = sub.getStartTime();
+            if (sub.getStartTime() != null && epicStartTime.isAfter(sub.getStartTime())) {
+                epicStartTime = sub.getStartTime();
+            }
         }
 
         setStartTime(epicStartTime);
@@ -59,9 +63,9 @@ public class EpicTask extends Task {
         LocalDateTime epicEndTime = null;
 
         for (SubTask sub : getSubtasks()) {
-            if (epicEndTime == null) epicEndTime = sub.getEndTime();
+            if (sub.getEndTime() != null && epicEndTime == null) epicEndTime = sub.getEndTime();
 
-            if (epicEndTime.isBefore(sub.getEndTime())) epicEndTime = sub.getEndTime();
+            if (sub.getEndTime() != null && epicEndTime.isBefore(sub.getEndTime())) epicEndTime = sub.getEndTime();
         }
 
         setEndTime(epicEndTime);
