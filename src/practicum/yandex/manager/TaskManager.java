@@ -7,6 +7,7 @@ import practicum.yandex.task.Task;
 import java.util.List;
 
 public interface TaskManager {
+    List<Task> getPrioritizedTasks();
     List<Task> getHistory();
     List<Task> getTasksValues();
     List<EpicTask> getEpicTasksValues();
