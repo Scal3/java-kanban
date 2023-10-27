@@ -24,10 +24,6 @@ public class KVTaskClient {
         this.apiKey = "?API_TOKEN=" + register(this.url);
     }
 
-    public static void main(String[] args) {
-        KVTaskClient client = new KVTaskClient("http://localhost:8078/");
-    }
-
     public void put(String key, String json) {
         // Метод должен сохранять состояние менеджера задач через запрос POST /save/<ключ>?API_TOKEN=.
         try {

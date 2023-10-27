@@ -1,10 +1,16 @@
 package practicum.yandex.manager;
 
 import com.google.gson.*;
+import practicum.yandex.api.DurationAdapter;
+import practicum.yandex.api.LocalDateTimeAdapter;
 import practicum.yandex.client.KVTaskClient;
 import practicum.yandex.task.EpicTask;
 import practicum.yandex.task.SubTask;
 import practicum.yandex.task.Task;
+
+import java.io.File;
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class HttpTaskManager extends FileBackedTasksManager {
     private static final String TASKS_KEY = "TASKS_KEY";
@@ -16,9 +22,12 @@ public class HttpTaskManager extends FileBackedTasksManager {
     private final Gson gson;
 
     public HttpTaskManager(String url) {
-        super();
+        super(new File("./tasks.csv"));
         this.url = url;
-        this.gson = new Gson();
+        this.gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .create();
         this.client = new KVTaskClient(this.url);
         this.setInitialState();
     }
@@ -126,7 +135,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
         JsonElement jsonElementSubs = JsonParser.parseString(client.load(SUBS_KEY));
         JsonElement jsonElementHistory = JsonParser.parseString(client.load(HISTORY_KEY));
 
-        if(!jsonElementTasks.isJsonObject()) {
+        if(!jsonElementTasks.isJsonNull() && !jsonElementTasks.isJsonObject()) {
             for (JsonElement taskJson : jsonElementTasks.getAsJsonArray().asList()) {
                 Task task = gson.fromJson(taskJson, Task.class);
                 tasks.put(task.getId(), task);
@@ -134,7 +143,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
             }
         }
 
-        if(!jsonElementEpics.isJsonObject()) {
+        if(!jsonElementEpics.isJsonNull() && !jsonElementEpics.isJsonObject()) {
             for (JsonElement epicJson : jsonElementEpics.getAsJsonArray().asList()) {
                 EpicTask epic = gson.fromJson(epicJson, EpicTask.class);
                 epicTasks.put(epic.getId(), epic);
@@ -142,7 +151,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
             }
         }
 
-        if(!jsonElementSubs.isJsonObject()) {
+        if(!jsonElementSubs.isJsonNull() && !jsonElementSubs.isJsonObject()) {
             for (JsonElement subJson : jsonElementSubs.getAsJsonArray().asList()) {
                 SubTask sub = gson.fromJson(subJson, SubTask.class);
                 subTasks.put(sub.getId(), sub);
@@ -150,7 +159,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
             }
         }
 
-        if(!jsonElementHistory.isJsonObject()) {
+        if(!jsonElementHistory.isJsonNull() && !jsonElementHistory.isJsonObject()) {
             for (JsonElement taskJson : jsonElementHistory.getAsJsonArray().asList()) {
                 Task task = gson.fromJson(taskJson, Task.class);
                 historyManager.add(task);

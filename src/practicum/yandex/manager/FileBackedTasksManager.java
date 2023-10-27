@@ -18,16 +18,12 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     private static final String FILE_HEADER = "id,type,name,status,description,startTime,duration,epic";
     private final File file;
 
-    public FileBackedTasksManager() {
-        this.file = null;
-    }
-
     public FileBackedTasksManager(File file) {
         this.file = file;
     }
 
     public static void main(String[] args) {
-        File file = new File("./test.csv");
+        File file = new File("./tasks.csv");
         TaskManager manager = new FileBackedTasksManager(file);
         Task task1 = new Task("task1", "task1", "NEW");
         Task task2 = new Task("task2", "task2", "NEW");

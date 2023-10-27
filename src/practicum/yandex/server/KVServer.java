@@ -45,7 +45,13 @@ public class KVServer {
                     return;
                 }
 
-                sendText(h, data.get(key));
+                if (data.get(key) != null) {
+                    sendText(h, data.get(key));
+                } else {
+                    System.out.println("По ключу " + key + " ничего не найдено");
+                    h.sendResponseHeaders(404, 0);
+                }
+
             } else {
                 System.out.println("/load ждёт GET-запрос, а получил: " + h.getRequestMethod());
                 h.sendResponseHeaders(405, 0);
