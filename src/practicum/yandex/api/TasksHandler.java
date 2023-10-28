@@ -5,15 +5,13 @@ import com.google.gson.Gson;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import practicum.yandex.manager.Managers;
 import practicum.yandex.manager.TaskManager;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.Duration;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class TasksHandler implements HttpHandler {
@@ -50,10 +48,7 @@ public class TasksHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .create();
+        Gson gson = Managers.getGson();
         EndpointTaskHandler endpointTaskHandler = new EndpointTaskHandler(manager, gson);
         EndpointEpicHandler endpointEpicHandler = new EndpointEpicHandler(manager, gson);
         EndpointSubTaskHandler endpointSubTaskHandler = new EndpointSubTaskHandler(manager, gson);

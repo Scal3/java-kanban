@@ -4,7 +4,6 @@ import com.sun.net.httpserver.HttpServer;
 import practicum.yandex.manager.Managers;
 import practicum.yandex.manager.TaskManager;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 
@@ -13,12 +12,11 @@ public class HttpTaskServer {
     private static final int PORT = 8080;
     private static final int BACKLOG = 0;
     private static final String TASKS_ROUTE = "/tasks";
-    private static final File TASKS_FILE = new File("./tasks.csv");
     private final TaskManager manager;
     private final HttpServer httpServer;
 
     public HttpTaskServer() throws IOException {
-        this.manager = Managers.getFileBackedManager(TASKS_FILE);
+        this.manager = Managers.getDefault("http://localhost:8078/");
         this.httpServer = HttpServer.create(new InetSocketAddress(PORT), BACKLOG);
         this.httpServer.createContext(TASKS_ROUTE, new TasksHandler(this.manager));
     }

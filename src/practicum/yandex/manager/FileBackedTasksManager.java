@@ -216,7 +216,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         save();
     }
 
-    private void save() throws ManagerSaveException {
+    public void save() throws ManagerSaveException {
         try (Writer fileWriter = new FileWriter(file.getAbsoluteFile(), StandardCharsets.UTF_8)) {
             fileWriter.write(createCsvString());
         } catch (IOException e) {

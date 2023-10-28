@@ -13,11 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
-import practicum.yandex.api.DurationAdapter;
-import practicum.yandex.api.LocalDateTimeAdapter;
+import practicum.yandex.manager.Managers;
 import practicum.yandex.manager.Statuses;
 import practicum.yandex.task.Task;
 
@@ -131,10 +129,7 @@ public class KVServer {
     }
 
     public void setTestData() {
-        Gson gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .create();
+        Gson gson = Managers.getGson();
 
         Task task1 = new Task("task1", "task1", Statuses.NEW.name());
         task1.setStartTime(LocalDateTime.of(2023, Month.APRIL, 10, 10, 10));

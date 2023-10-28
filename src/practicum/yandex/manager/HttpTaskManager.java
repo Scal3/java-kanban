@@ -1,16 +1,12 @@
 package practicum.yandex.manager;
 
 import com.google.gson.*;
-import practicum.yandex.api.DurationAdapter;
-import practicum.yandex.api.LocalDateTimeAdapter;
 import practicum.yandex.client.KVTaskClient;
 import practicum.yandex.task.EpicTask;
 import practicum.yandex.task.SubTask;
 import practicum.yandex.task.Task;
 
 import java.io.File;
-import java.time.Duration;
-import java.time.LocalDateTime;
 
 public class HttpTaskManager extends FileBackedTasksManager {
     private static final String TASKS_KEY = "TASKS_KEY";
@@ -24,108 +20,9 @@ public class HttpTaskManager extends FileBackedTasksManager {
     public HttpTaskManager(String url) {
         super(new File("./tasks.csv"));
         this.url = url;
-        this.gson = new GsonBuilder()
-                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
-                .registerTypeAdapter(Duration.class, new DurationAdapter())
-                .create();
+        this.gson = Managers.getGson();
         this.client = new KVTaskClient(this.url);
         this.setInitialState();
-    }
-
-    @Override
-    public Task getTaskById(int id) {
-        Task task = super.getTaskById(id);
-        saveToServer();
-
-        return task;
-    }
-
-    @Override
-    public EpicTask getEpicTaskById(int id) {
-        EpicTask task = super.getEpicTaskById(id);
-        saveToServer();
-
-        return task;
-    }
-
-    @Override
-    public SubTask getSubTaskById(int id) {
-        SubTask task = super.getSubTaskById(id);
-        saveToServer();
-
-        return task;
-    }
-
-    @Override
-    public void deleteAllTasks() {
-        super.deleteAllTasks();
-        saveToServer();
-    }
-
-    @Override
-    public void deleteAllEpicTasks() {
-        super.deleteAllEpicTasks();
-        saveToServer();
-    }
-
-    @Override
-    public void deleteAllSubTasks() {
-        super.deleteAllSubTasks();
-        saveToServer();
-    }
-
-    @Override
-    public void createTask(Task task) {
-        super.createTask(task);
-        saveToServer();
-    }
-
-    @Override
-    public void createEpicTask(EpicTask task) {
-        super.createEpicTask(task);
-        saveToServer();
-    }
-
-    @Override
-    public void createSubTask(SubTask task) {
-        super.createSubTask(task);
-        saveToServer();
-    }
-
-    @Override
-    public void updateTask(Task task) {
-        super.updateTask(task);
-        saveToServer();
-    }
-
-    @Override
-    public void updateEpicTask(EpicTask task) {
-        super.updateEpicTask(task);
-        saveToServer();
-    }
-
-    @Override
-    public void updateSubTask(SubTask task) {
-        super.updateSubTask(task);
-        saveToServer();
-    }
-
-    @Override
-    public void deleteTaskById(int id) {
-        super.deleteTaskById(id);
-        saveToServer();
-    }
-
-    @Override
-    public void deleteEpicTaskById(int id) {
-        super.deleteEpicTaskById(id);
-        saveToServer();
-    }
-
-    @Override
-    public void deleteSubTaskById(int id) {
-        super.deleteSubTaskById(id);
-        saveToServer();
     }
 
     private void setInitialState() {
@@ -169,7 +66,8 @@ public class HttpTaskManager extends FileBackedTasksManager {
         taskId = id;
     }
 
-    private void saveToServer() {
+    @Override
+    public void save() {
         client.put(TASKS_KEY, gson.toJson(tasks.values()));
         client.put(EPICS_KEY, gson.toJson(epicTasks.values()));
         client.put(SUBS_KEY, gson.toJson(subTasks.values()));

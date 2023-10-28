@@ -25,7 +25,6 @@ public class KVTaskClient {
     }
 
     public void put(String key, String json) {
-        // Метод должен сохранять состояние менеджера задач через запрос POST /save/<ключ>?API_TOKEN=.
         try {
             HttpRequest request = requestBuilder
                     .POST(HttpRequest.BodyPublishers.ofString(json))
@@ -60,7 +59,6 @@ public class KVTaskClient {
     }
 
     public String load(String key) {
-        // Метод должен возвращать состояние менеджера задач через запрос GET /load/<ключ>?API_TOKEN=
         String state = "";
 
         try {
