@@ -8,13 +8,14 @@ import java.util.Objects;
 
 public class EpicTask extends Task {
     private List<SubTask> subtasks;
-    private final TaskTypes type = TaskTypes.EPIC;
     private LocalDateTime endTime;
 
     public EpicTask(String name, String description, String status, List<SubTask> subtasks) {
         super(name, description, status);
 
         this.subtasks = subtasks;
+        this.type = TaskTypes.EPIC;
+        this.calculateTimes();
     }
 
     public List<SubTask> getSubtasks() {

@@ -2,13 +2,24 @@ package practicum.yandex.server;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+import practicum.yandex.api.DurationAdapter;
+import practicum.yandex.api.LocalDateTimeAdapter;
+import practicum.yandex.manager.Statuses;
+import practicum.yandex.task.Task;
 
 public class KVServer {
     public static final int PORT = 8078;
@@ -113,6 +124,27 @@ public class KVServer {
         System.out.println("Открой в браузере http://localhost:" + PORT + "/");
         System.out.println("API_TOKEN: " + apiToken);
         server.start();
+    }
+
+    public void stop() {
+        server.stop(0);
+    }
+
+    public void setTestData() {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(LocalDateTime.class, new LocalDateTimeAdapter())
+                .registerTypeAdapter(Duration.class, new DurationAdapter())
+                .create();
+
+        Task task1 = new Task("task1", "task1", Statuses.NEW.name());
+        task1.setStartTime(LocalDateTime.of(2023, Month.APRIL, 10, 10, 10));
+        task1.setDuration(Duration.ofHours(20));
+
+        Task task2 = new Task("task2", "task2", Statuses.NEW.name());
+        task2.setStartTime(LocalDateTime.of(2022, Month.APRIL, 10, 10, 10));
+        task2.setDuration(Duration.ofHours(20));
+
+        data.put("TASKS_KEY", gson.toJson(List.of(task1, task2)));
     }
 
     private String generateApiToken() {

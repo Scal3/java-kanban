@@ -81,7 +81,8 @@ public class EndpointSubTaskHandler {
         }
 
         if (manager.getSubTaskById(getIdFromQuery(exchange).get()) != null) {
-            manager.deleteTaskById(getIdFromQuery(exchange).get());
+            manager.deleteSubTaskById(getIdFromQuery(exchange).get());
+
             sendResponse(
                     exchange,
                     gson.toJson("Deleted subtask with id " + getIdFromQuery(exchange).get()),
